@@ -154,7 +154,7 @@ which is a flatten list, like '(20182 22905 ...)"
 
 (defun ta-make-overlay (position face)
   "Allocate an overlay to highlight a possible candidate character."
-  (let ((ol (make-overlay position (+ 2 position) nil t nil)))
+  (let ((ol (make-overlay position (+ 1 position) nil t nil)))
     (overlay-put ol 'face face)
     (overlay-put ol 'ta-overlay t)
     ))
@@ -183,12 +183,13 @@ which is a flatten list, like '(20182 22905 ...)"
   )
 
 (defun ta-find-previous-candidate (&optional reverse)
-  "Update `ta-current-position' and `ta-current-homophony-list'"
+  "Update `ta-current-position' and `ta-current-homophony-list'.
+When REVERSE is non-nil, find-next-candidate."
   (interactive)
   (save-excursion
     (do ((i ta-max-search-range (1- i)))
         ((or (= i 0)                      ;end test
-             (= (point) (point-max))
+             (and reverse (= (point) (point-max)))
              (= (point) (point-min))
              (memq (char-after (point)) ta-flattened-homophony-list))
          (if (memq (char-after (point)) ta-flattened-homophony-list) ;if: final result
@@ -226,23 +227,29 @@ which is a flatten list, like '(20182 22905 ...)"
   (interactive)
   (ta-next-homophony 'reverse))
 
-(defun ta-left-candidate (&optional reversal)
+(defun ta-left-candidate ()
   (interactive)
   (save-excursion
     ;; [FIXME] Remove idle timer first, if it exists.
-    (goto-char ta-current-position)
-    ;;(ta-delete-region-overlay ta-current-position (+ 2 ta-current-position))
-    (ta-delete-all-overlays)
-    (ta-find-previous-candidate reversal)
+    (when ta-current-position
+      (ta-delete-all-overlays)
+      (goto-char (- ta-current-position 1)))
+    (ta-find-previous-candidate)
+
     ))
 
 (ta-delete-all-overlays)
 (defun ta-right-candidate ()
   (interactive)
-  (ta-left-candidate 'reversal))
+  (save-excursion
+    ;; [FIXME] Remove idle timer first, if it exists.
+    (when ta-current-position
+      (ta-delete-all-overlays)
+      (goto-char (+ ta-current-position 1)))
+    (ta-find-previous-candidate 'reverse)
+    ))
 
 
-的他的他他他
 
 
 
