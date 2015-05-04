@@ -39,6 +39,7 @@
       '(("他" "她" "它" "牠" "祂")
         ("你" "妳" "您")
         ("的" "得")
+        ("在" "再")
         )
       )
 
@@ -46,7 +47,7 @@
   "Max search range for possible homophony.")
 
 
-(defvar ta-delay 3
+(defvar ta-delay 0
   "The number of seconds to wait before checking, after a \"delayed\" command."
   )
 
@@ -113,28 +114,30 @@ which is a flatten list, like '(20182 22905 ...)"
       (setq ta--timer-object
             (run-with-idle-timer ta-delay nil
                                  (lambda ()
-                                   (ta-show)
+                                   (ta-auto-update-candidate)
                                    (setq ta--timer-object nil)))))))
 
 (defun ta-pre-command-hook ()
-  (ta-remove))
+  ;; (ta-delete-all-overlays)
+  )
 
 
 (define-minor-mode ta-mode
   "Deal with homophonic characters"
   :lighter " ta"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "<up>") 'ta-previous-homophony)
-            (define-key map (kbd "<down>") 'ta-next-homophony)
-            (define-key map (kbd "<left>") 'ta-previous-candidate)
-            (define-key map (kbd "<right>") 'ta-next-candidate)
-            map)
   :global nil
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "M-p") 'ta-previous-homophony)
+            (define-key map (kbd "M-n") 'ta-next-homophony)
+            map
+            )
   (if ta-mode
       (progn
+        (ta-reload-homophony-list)
         (add-hook 'pre-command-hook 'ta-pre-command-hook nil t)
         (add-hook 'post-command-hook 'ta-post-command-hook nil t))
     (progn
+      (ta-delete-all-overlays)
       (remove-hook 'pre-command-hook 'ta-pre-command-hook t)
       (remove-hook 'post-command-hook 'ta-post-command-hook t))))
 
@@ -142,8 +145,12 @@ which is a flatten list, like '(20182 22905 ...)"
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "<up>") 'ta-previous-homophony)
     (define-key map (kbd "<down>") 'ta-next-homophony)
+    (define-key map (kbd "<left>") 'ta-previous-candidate)
+    (define-key map (kbd "<right>") 'ta-next-candidate)
     map))
 
+(define-key ta-mode-map (kbd "M-i") 'ta-left)
+(define-key ta-mode-map (kbd "M-o") 'ta-right)
 ;; ======================================================
 ;; Overlays
 ;; ======================================================
@@ -258,7 +265,7 @@ find nextcandidate. Should be called interactively, not by idle timer."
   (interactive)
   (ta-next-homophony 'reverse))
 
-(defun ta-left-candidate ()
+(defun ta-left ()
   (interactive)
   (save-excursion
     ;; [FIXME] Remove idle timer first, if it exists.
@@ -269,7 +276,7 @@ find nextcandidate. Should be called interactively, not by idle timer."
     ))
 
 (ta-delete-all-overlays)
-(defun ta-right-candidate ()
+(defun ta-right ()
   (interactive)
   (save-excursion
     ;; [FIXME] Remove idle timer first, if it exists.
