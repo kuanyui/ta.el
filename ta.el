@@ -52,7 +52,7 @@
 
 
 (defvar ta-delay 0
-  "The number of seconds to wait before checking, after a \"delayed\" command."
+  "The number of seconds to wait."
   )
 
 ;; ======================================================

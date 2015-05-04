@@ -20,7 +20,7 @@ Add following config into your =init.el= ：
 (require 'ta)
 
 ;; If you want to enable `ta-mode' in specific mode automatically, add this
-;; 如果想要在特定mode中自動啟用`ta-mode'，可以加入這樣的設定
+;; 如果想要在特定 mode 中自動啟用`ta-mode'，可以加入這樣的設定
 (mapc (lambda (mode-hook) (add-hook mode-hook 'ta-mode))
       '(org-mode-hook
         markdown-mode-hook
@@ -36,6 +36,30 @@ Add following config into your =init.el= ：
 - =M-x ta-mode=, then:
   + 使用 =M-p= 和 =M-n= 修改目前被高亮的同音字。
   + 使用 =M-i= 和 =M-o= 在所有可能的錯誤同音字中跳來跳去。
+
+** Customization 自訂
+
+#+BEGIN_SRC elisp
+;; The homophonic characters' list.
+;; 所有同音字清單
+(setq ta-homophony-list
+  '(("他" "她" "它" "牠" "祂")
+    ("你" "妳")
+    ("的" "得")
+    ("在" "再")
+    ))
+
+;; Automatically searching range for possible homophony cadidates.
+;; By default, search only 300 characters backward the cursor.
+;; 自動搜索候選字的搜索範圍，預設只搜索游標前的 300 個字元。
+(setq ta-max-search-range 300
+  )
+
+;; The seconds to wait "auto-search-and-highlight". Default is 0.
+;; 等待自動搜索的延遲時間。預設為 0。
+(setq ta-delay 0)
+
+#+END_SRC
 
 ** License 授權條款
 
