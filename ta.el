@@ -1,7 +1,5 @@
 ;;; ta.el --- A utility to deal with homophonic characters  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015  kuanyui
-
 ;; Author: kuanyui <azazabc123@gmail.com>
 ;; Package-Requires: ((emacs "24.3") (cl-lib "0.5"))
 ;; X-URL: http://github.com/kuanyui/ta.el

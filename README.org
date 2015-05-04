@@ -12,10 +12,15 @@ For those who tired of deal with homophonic characters.\\
 
 ** Installation 安裝
 
+=ta.el= is available in [[https://github.com/milkypostman/melpa][MELPA]] repository, so you can install =ta= easily with =M-x list-packages=.\\
+=ta.el= 可以在 [[https://github.com/milkypostman/melpa][MELPA]] 取得, 所以你可以直接透過 =M-x list-packages= 安裝 =ta= 。
+
 Add following config into your =init.el= ：\\
 在您的 =init.el= 中加入下列設定：
 
 #+BEGIN_SRC elisp
+;; The following two lines ain't needed if installing via MELPA.
+;; 如果透過 MELPA 安裝，就不需要加這兩行：
 (add-to-list 'load-path "~/PATH/TO/ta.el/")
 (require 'ta)
 
