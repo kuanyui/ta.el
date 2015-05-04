@@ -198,7 +198,7 @@ find nextcandidate. Should be called interactively, not by idle timer."
              (= (point) (point-min))
              (memq (char-after (point)) ta-flattened-homophony-list))
          ;; Final Result (Run after end test passed)
-         (if (memq (char-after (point)) ta-flattened-homophony-list)
+         (if (memq (char-after (point)) ta-flattened-homophony-list) ;If found candidate
              (progn
                (ta-delete-all-overlays)
                (ta-make-overlay (point) 'ta-highlight)
@@ -220,16 +220,18 @@ find nextcandidate. Should be called interactively, not by idle timer."
 (defun ta-next-homophony (&optional reverse)
   (interactive)
   (ta-find-previous-candidate reverse)
-  (if (and
-       (number-or-marker-p ta-current-position)
-       (<= (1+ ta-current-position) (point-max)))
-      (let ((current-character (char-to-string (char-after ta-current-position))))
-        (ta-replace-char
-         ta-current-position
-         (ta--get-next-elem current-character
-                            (if reverse
-                                (reverse ta-current-homophony-list)
-                              ta-current-homophony-list))))))
+  (if (memq (char-after ta-current-position) ta-flattened-homophony-list)
+      (if (and
+           (number-or-marker-p ta-current-position)
+           (<= (1+ ta-current-position) (point-max)))
+          (let ((current-character (char-to-string (char-after ta-current-position))))
+            (ta-replace-char
+             ta-current-position
+             (ta--get-next-elem current-character
+                                (if reverse
+                                    (reverse ta-current-homophony-list)
+                                  ta-current-homophony-list)))))
+    (message "No candidate found.")))
 
 (defun ta-previous-homophony ()
   (interactive)
