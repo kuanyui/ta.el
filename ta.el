@@ -185,7 +185,6 @@ Used in idle timer."
       ;; Main
       (left-char))))
 
-
 (defun ta-find-previous-candidate (&optional reverse)
   "Update `ta-current-position' and `ta-current-homophony-list',
  without any range limit. When REVERSE is non-nil,
@@ -220,14 +219,17 @@ find nextcandidate. Should be called interactively, not by idle timer."
 
 (defun ta-next-homophony (&optional reverse)
   (interactive)
-  (ta-find-previous-candidate)
-  (let ((current-character (char-to-string (char-after ta-current-position))))
-    (ta-replace-char
-     ta-current-position
-     (ta--get-next-elem current-character
-                        (if reverse
-                            (reverse ta-current-homophony-list)
-                          ta-current-homophony-list)))))
+  (ta-find-previous-candidate reverse)
+  (if (and
+       (number-or-marker-p ta-current-position)
+       (<= (1+ ta-current-position) (point-max)))
+      (let ((current-character (char-to-string (char-after ta-current-position))))
+        (ta-replace-char
+         ta-current-position
+         (ta--get-next-elem current-character
+                            (if reverse
+                                (reverse ta-current-homophony-list)
+                              ta-current-homophony-list))))))
 
 (defun ta-previous-homophony ()
   (interactive)
@@ -235,15 +237,21 @@ find nextcandidate. Should be called interactively, not by idle timer."
 
 (defun ta-left ()
   (interactive)
-  (left-char)
-  (ta-find-previous-candidate)
-  (goto-char ta-current-position))
+  (if (number-or-marker-p ta-current-position)
+      (progn
+        (left-char)
+        (ta-find-previous-candidate)
+        (goto-char ta-current-position))
+    (message "Cannot find any candidate")))
 
 (defun ta-right ()
   (interactive)
-  (right-char)
-  (ta-find-previous-candidate 'reverse)
-  (goto-char ta-current-position))
+  (if (number-or-marker-p ta-current-position)
+      (progn
+        (right-char)
+        (ta-find-previous-candidate 'reverse)
+        (goto-char ta-current-position))
+    (message "Cannot find any candidate")))
 
 (provide 'ta)
 ;;; ta.el ends here
