@@ -1,7 +1,7 @@
 * ta.el － Deal with homophonic characters 搞定同音字
 
 For those who tired of deal with homophonic characters.
-受夠了「她他它祂牠」這種通通都是「tatatatata」的同音字？
+受夠了「她他它祂牠」這種發音統統都是「tatatatata」的同音字？
 
 [[file:demo.gif]]
 
@@ -21,10 +21,26 @@ Add following config into your =init.el= ：
 
 ;; If you want to enable `ta-mode' in specific mode automatically, add this
 ;; 如果想要在特定mode中自動啟用`ta-mode'，可以加入這樣的設定
-(add-hook
-
+(mapc (lambda (mode-hook) (add-hook mode-hook 'ta-mode))
+      '(org-mode-hook
+        markdown-mode-hook
+        rst-mode-hook))
 #+END_SRC
 
 ** Usage 使用
 
-=M-x ta-mode= 即可使用。
+- =M-x ta-mode= to activate, then:
+  + Use =M-p= & =M-n= to modify the homophonic characters.
+  + Use =M-i= & =M-o= to jump between all possible candidate characters.
+
+- =M-x ta-mode=, then:
+  + 使用 =M-p= 和 =M-n= 修改目前被高亮的同音字。
+  + 使用 =M-i= 和 =M-o= 在所有可能的錯誤同音字中跳來跳去。
+
+** License 授權條款
+
+WTFPL 2.0
+
+Ono Hiroko (kuanyui) (ɔ) Copyleft 2014
+
+This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
