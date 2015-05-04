@@ -12,7 +12,7 @@ For those who tired of deal with homophonic characters.\\
 
 ** Installation 安裝
 
-=ta.el= is available in [[https://github.com/milkypostman/melpa][MELPA]] repository, so you can install =ta= easily with =M-x list-packages=.\\
+=ta.el= is available on [[https://github.com/milkypostman/melpa][MELPA]] repository, so you can install =ta= easily via =M-x list-packages=.\\
 =ta.el= 可以在 [[https://github.com/milkypostman/melpa][MELPA]] 取得, 所以你可以直接透過 =M-x list-packages= 安裝 =ta= 。
 
 Add following config into your =init.el= ：\\
