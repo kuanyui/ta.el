@@ -35,13 +35,14 @@
 ;; Settings
 ;; ======================================================
 
-(setq ta-homophony-list
-      '(("他" "她" "它" "牠" "祂")
-        ("你" "妳" "您")
-        ("的" "得")
-        ("在" "再")
-        )
-      )
+(defvar ta-homophony-list
+  '(("他" "她" "它" "牠" "祂")
+    ("你" "妳")
+    ("的" "得")
+    ("在" "再")
+    )
+  "The homophonic characters' list. Feel free to customized this
+  if you need."  )
 
 (defvar ta-max-search-range 300
   "Max search range for possible homophony.")
@@ -50,19 +51,6 @@
 (defvar ta-delay 0
   "The number of seconds to wait before checking, after a \"delayed\" command."
   )
-
-(defcustom flyspell-default-delayed-commands
-  '(self-insert-command
-    delete-backward-char
-    backward-or-forward-delete-char
-    delete-char
-    scrollbar-vertical-drag
-    backward-delete-char-untabify)
-  "The standard list of delayed commands for Flyspell.
-See `flyspell-delayed-commands'."
-  :group 'flyspell
-  :version "21.1"
-  :type '(repeat (symbol)))
 
 ;; ======================================================
 ;; Homophony list function
@@ -75,8 +63,6 @@ which is a flatten list, like '(20182 22905 ...)"
   (setq ta-flattened-homophony-list (mapcar (lambda (c) (string-to-char c))
                                             (apply #'append ta-homophony-list))))
 
-(ta-reload-homophony-list)
-
 (defun ta-get-homophony-list (char-str)
   "Get the homophony list of CHAR-STR"
   (car (member* char-str
@@ -87,20 +73,12 @@ which is a flatten list, like '(20182 22905 ...)"
 ;; Face
 ;; ======================================================
 
-(defface ta-candidates
+(defface ta-highlight
   '((((class color) (background light))
      (:foreground "#ff8700"))
     (((class color) (background dark))
      (:foreground "#ffa722")))
   "Face for all candidates"
-  :group 'ta-faces)
-
-(defface ta-current-candidate
-  '((((class color) (background light))
-     (:foreground "#ff66aa"))
-    (((class color) (background dark))
-     (:foreground "#ff66aa")))
-  "Face for current candidate"
   :group 'ta-faces)
 
 ;; ======================================================
@@ -121,7 +99,6 @@ which is a flatten list, like '(20182 22905 ...)"
   ;; (ta-delete-all-overlays)
   )
 
-
 (define-minor-mode ta-mode
   "Deal with homophonic characters"
   :lighter " ta"
@@ -129,6 +106,8 @@ which is a flatten list, like '(20182 22905 ...)"
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "M-p") 'ta-previous-homophony)
             (define-key map (kbd "M-n") 'ta-next-homophony)
+            (define-key map (kbd "M-i") 'ta-left)
+            (define-key map (kbd "M-o") 'ta-right)
             map
             )
   (if ta-mode
@@ -149,15 +128,9 @@ which is a flatten list, like '(20182 22905 ...)"
     (define-key map (kbd "<right>") 'ta-next-candidate)
     map))
 
-(define-key ta-mode-map (kbd "M-i") 'ta-left)
-(define-key ta-mode-map (kbd "M-o") 'ta-right)
 ;; ======================================================
 ;; Overlays
 ;; ======================================================
-
-;;(remove-overlays beg end 'flyspell-overlay t)
-;;(overlay-put overlay 'flyspell-overlay t)
-;;(overlays-at pos)
 
 (defun ta-make-overlay (position face)
   "Allocate an overlay to highlight a possible candidate character."
@@ -186,7 +159,7 @@ which is a flatten list, like '(20182 22905 ...)"
   (save-excursion
     (goto-char position)
     (insert character))
-  (ta-make-overlay position 'ta-candidates)
+  (ta-make-overlay position 'ta-highlight)
   )
 
 (defun ta-auto-update-candidate ()
@@ -205,7 +178,7 @@ Used in idle timer."
          (progn
            (ta-delete-all-overlays)
            (when (memq (char-after (point)) ta-flattened-homophony-list)
-             (ta-make-overlay (point) 'ta-candidates)
+             (ta-make-overlay (point) 'ta-highlight)
              (setq ta-current-position (point)
                    ta-current-homophony-list (ta-get-homophony-list
                                               (char-to-string
@@ -232,7 +205,7 @@ find nextcandidate. Should be called interactively, not by idle timer."
          (if (memq (char-after (point)) ta-flattened-homophony-list)
              (progn
                (ta-delete-all-overlays)
-               (ta-make-overlay (point) 'ta-candidates)
+               (ta-make-overlay (point) 'ta-highlight)
                (setq ta-current-position (point)
                      ta-current-homophony-list (ta-get-homophony-list
                                                 (char-to-string
