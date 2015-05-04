@@ -1,0 +1,30 @@
+* ta.el － Deal with homophonic characters 搞定同音字
+
+For those who tired of deal with homophonic characters.
+受夠了「她他它祂牠」這種通通都是「tatatatata」的同音字？
+
+[[file:demo.gif]]
+
+#+BEGIN_SRC
+你得書在他那裡，不再我這裡啦！  #  ＝ω＝"
+妳的書在她那裡，不在我這裡啦！  # ˊ・ω・ˋ
+#+END_SRC
+
+** Installation 安裝
+
+Add following config into your =init.el= ：
+在您的 =init.el= 中加入下列設定：
+
+#+BEGIN_SRC elisp
+(add-to-list 'load-path "~/PATH/TO/ta.el/")
+(require 'ta)
+
+;; If you want to enable `ta-mode' in specific mode automatically, add this
+;; 如果想要在特定mode中自動啟用`ta-mode'，可以加入這樣的設定
+(add-hook
+
+#+END_SRC
+
+** Usage 使用
+
+=M-x ta-mode= 即可使用。
