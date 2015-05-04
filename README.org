@@ -1,6 +1,6 @@
 * ta.el － Deal with homophonic characters 搞定同音字
 
-For those who tired of deal with homophonic characters.
+For those who tired of deal with homophonic characters.\\
 受夠了「她他它祂牠」這種發音統統都是「tatatatata」的同音字？
 
 [[file:demo.gif]]
@@ -12,7 +12,7 @@ For those who tired of deal with homophonic characters.
 
 ** Installation 安裝
 
-Add following config into your =init.el= ：
+Add following config into your =init.el= ：\\
 在您的 =init.el= 中加入下列設定：
 
 #+BEGIN_SRC elisp
