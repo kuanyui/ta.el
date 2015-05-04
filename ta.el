@@ -267,27 +267,17 @@ find nextcandidate. Should be called interactively, not by idle timer."
 
 (defun ta-left ()
   (interactive)
-  (save-excursion
-    ;; [FIXME] Remove idle timer first, if it exists.
-    (when ta-current-position
-      (goto-char (- ta-current-position 1)))
-    (ta-find-previous-candidate)
+  (left-char)
+  (ta-find-previous-candidate)
+  (goto-char ta-current-position)
+  )
 
-    ))
-
-(ta-delete-all-overlays)
 (defun ta-right ()
   (interactive)
-  (save-excursion
-    ;; [FIXME] Remove idle timer first, if it exists.
-    (when ta-current-position
-      (goto-char (+ ta-current-position 1)))
-    (ta-find-previous-candidate 'reverse)
-    ))
-
-
-
-
+  (right-char)
+  (ta-find-previous-candidate 'reverse)
+  (goto-char ta-current-position)
+  )
 
 (provide 'ta)
 ;;; ta.el ends here
