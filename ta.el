@@ -182,28 +182,59 @@ which is a flatten list, like '(20182 22905 ...)"
   (ta-make-overlay position 'ta-candidates)
   )
 
-(defun ta-find-previous-candidate (&optional reverse)
-  "Update `ta-current-position' and `ta-current-homophony-list'.
-When REVERSE is non-nil, find-next-candidate."
+(defun ta-auto-update-candidate ()
+  "Update `ta-current-position' and `ta-current-homophony-list' within
+ `ta-max-search-range' steps.
+Used in idle timer."
   (interactive)
   (save-excursion
     (do ((i ta-max-search-range (1- i)))
-        ((or (= i 0)                      ;end test
-             (and reverse (= (point) (point-max)))
+        (
+         ;;End Test
+         (or (= i 0)
              (= (point) (point-min))
              (memq (char-after (point)) ta-flattened-homophony-list))
-         (if (memq (char-after (point)) ta-flattened-homophony-list) ;if: final result
+         ;; Final Result (Run after end test passed)
+         (progn
+           (ta-delete-all-overlays)
+           (when (memq (char-after (point)) ta-flattened-homophony-list)
+             (ta-make-overlay (point) 'ta-candidates)
+             (setq ta-current-position (point)
+                   ta-current-homophony-list (ta-get-homophony-list
+                                              (char-to-string
+                                               (char-after ta-current-position))))
+             (point)))
+         )
+      ;; Main
+      (left-char))))
+
+
+(defun ta-find-previous-candidate (&optional reverse)
+  "Update `ta-current-position' and `ta-current-homophony-list',
+ without any range limit. When REVERSE is non-nil,
+find nextcandidate. Should be called interactively, not by idle timer."
+  (interactive)
+  (save-excursion
+    (do ((i 0 (1+ i)))
+        (
+         ;;End Test
+         (or (and reverse (= (point) (point-max)))
+             (= (point) (point-min))
+             (memq (char-after (point)) ta-flattened-homophony-list))
+         ;; Final Result (Run after end test passed)
+         (if (memq (char-after (point)) ta-flattened-homophony-list)
              (progn
+               (ta-delete-all-overlays)
                (ta-make-overlay (point) 'ta-candidates)
                (setq ta-current-position (point)
                      ta-current-homophony-list (ta-get-homophony-list
-                                                (char-to-string (char-after ta-current-position))))
+                                                (char-to-string
+                                                 (char-after ta-current-position))))
                (point))
-           nil))
-      (if reverse
-          (right-char)
-        (left-char)))
-    ))
+           (message (if reverse "The last candidate" "The first candidate")))
+         )
+      ;; Main
+      (if reverse (right-char) (left-char)))))
 
 (defun ta--get-next-elem (elem list)
   (let ((l (member elem list)))
@@ -232,7 +263,6 @@ When REVERSE is non-nil, find-next-candidate."
   (save-excursion
     ;; [FIXME] Remove idle timer first, if it exists.
     (when ta-current-position
-      (ta-delete-all-overlays)
       (goto-char (- ta-current-position 1)))
     (ta-find-previous-candidate)
 
@@ -244,7 +274,6 @@ When REVERSE is non-nil, find-next-candidate."
   (save-excursion
     ;; [FIXME] Remove idle timer first, if it exists.
     (when ta-current-position
-      (ta-delete-all-overlays)
       (goto-char (+ ta-current-position 1)))
     (ta-find-previous-candidate 'reverse)
     ))
