@@ -3,12 +3,13 @@
 ;; Copyright (C) 2015  kuanyui
 
 ;; Author: kuanyui <azazabc123@gmail.com>
+;; Package-Requires: ((emacs "24.3") (cl-lib "0.5"))
 ;; X-URL: http://github.com/kuanyui/ta.el
 ;; Version: 1.0
 ;; Keywords: tools
 
 ;; WTFPL 2.0
-;; Ono Hiroko (kuanyui) (ɔ) Copyleft 2014
+;; Ono Hiroko (kuanyui) (ɔ) Copyleft 2015
 ;;
 ;; This program is free software. It comes without any warranty, to
 ;; the extent permitted by applicable law. You can redistribute it
@@ -25,6 +26,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+
 (defvar-local ta-overlay nil) ;(make-variable-buffer-local 'ta-overlay)
 (defvar-local ta-current-position nil)
 (defvar-local ta-current-homophony-list nil)
@@ -40,8 +43,7 @@
   '(("他" "她" "它" "牠" "祂")
     ("你" "妳")
     ("的" "得")
-    ("在" "再")
-    )
+    ("在" "再"))
   "The homophonic characters' list. Feel free to customized this
   if you need."  )
 
@@ -50,8 +52,7 @@
 
 
 (defvar ta-delay 0
-  "The number of seconds to wait."
-  )
+  "The number of seconds to wait.")
 
 ;; ======================================================
 ;; Homophony list function
@@ -66,9 +67,9 @@ which is a flatten list, like '(20182 22905 ...)"
 
 (defun ta-get-homophony-list (char-str)
   "Get the homophony list of CHAR-STR"
-  (car (member* char-str
-                ta-homophony-list
-                :test (lambda (char list) (member char list)))))
+  (car (cl-member char-str
+                  ta-homophony-list
+                  :test (lambda (char list) (member char list)))))
 
 ;; ======================================================
 ;; Face
@@ -109,8 +110,7 @@ which is a flatten list, like '(20182 22905 ...)"
             (define-key map (kbd "M-n") 'ta-next-homophony)
             (define-key map (kbd "M-i") 'ta-left)
             (define-key map (kbd "M-o") 'ta-right)
-            map
-            )
+            map)
   (if ta-mode
       (progn
         (ta-reload-homophony-list)
@@ -137,8 +137,7 @@ which is a flatten list, like '(20182 22905 ...)"
   "Allocate an overlay to highlight a possible candidate character."
   (let ((ol (make-overlay position (+ 1 position) nil t nil)))
     (overlay-put ol 'face face)
-    (overlay-put ol 'ta-overlay t)
-    ))
+    (overlay-put ol 'ta-overlay t)))
 
 (defun ta-delete-region-overlay (begin end)
   (remove-overlays begin end 'ta-overlay t))
@@ -160,8 +159,7 @@ which is a flatten list, like '(20182 22905 ...)"
   (save-excursion
     (goto-char position)
     (insert character))
-  (ta-make-overlay position 'ta-highlight)
-  )
+  (ta-make-overlay position 'ta-highlight))
 
 (defun ta-auto-update-candidate ()
   "Update `ta-current-position' and `ta-current-homophony-list' within
@@ -169,7 +167,7 @@ which is a flatten list, like '(20182 22905 ...)"
 Used in idle timer."
   (interactive)
   (save-excursion
-    (do ((i ta-max-search-range (1- i)))
+    (cl-do ((i ta-max-search-range (1- i)))
         (
          ;;End Test
          (or (= i 0)
@@ -184,8 +182,7 @@ Used in idle timer."
                    ta-current-homophony-list (ta-get-homophony-list
                                               (char-to-string
                                                (char-after ta-current-position))))
-             (point)))
-         )
+             (point))))
       ;; Main
       (left-char))))
 
@@ -196,7 +193,7 @@ Used in idle timer."
 find nextcandidate. Should be called interactively, not by idle timer."
   (interactive)
   (save-excursion
-    (do ((i 0 (1+ i)))
+    (cl-do ((i 0 (1+ i)))
         (
          ;;End Test
          (or (and reverse (= (point) (point-max)))
@@ -212,8 +209,7 @@ find nextcandidate. Should be called interactively, not by idle timer."
                                                 (char-to-string
                                                  (char-after ta-current-position))))
                (point))
-           (message (if reverse "The last candidate" "The first candidate")))
-         )
+           (message (if reverse "The last candidate" "The first candidate"))))
       ;; Main
       (if reverse (right-char) (left-char)))))
 
@@ -232,8 +228,7 @@ find nextcandidate. Should be called interactively, not by idle timer."
      (ta--get-next-elem current-character
                         (if reverse
                             (reverse ta-current-homophony-list)
-                          ta-current-homophony-list
-                          )))))
+                          ta-current-homophony-list)))))
 
 (defun ta-previous-homophony ()
   (interactive)
@@ -243,15 +238,13 @@ find nextcandidate. Should be called interactively, not by idle timer."
   (interactive)
   (left-char)
   (ta-find-previous-candidate)
-  (goto-char ta-current-position)
-  )
+  (goto-char ta-current-position))
 
 (defun ta-right ()
   (interactive)
   (right-char)
   (ta-find-previous-candidate 'reverse)
-  (goto-char ta-current-position)
-  )
+  (goto-char ta-current-position))
 
 (provide 'ta)
 ;;; ta.el ends here
