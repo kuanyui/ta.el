@@ -1,4 +1,4 @@
-;;; ta.el --- A utility to deal with homophonic characters  -*- lexical-binding: t; -*-
+;;; ta.el --- A tool to deal with Chinese homophonic characters  -*- lexical-binding: t; -*-
 
 ;; Author: kuanyui <azazabc123@gmail.com>
 ;; Package-Requires: ((emacs "24.3") (cl-lib "0.5"))
@@ -26,7 +26,7 @@
 
 (require 'cl-lib)
 
-(defvar-local ta-overlay nil) ;(make-variable-buffer-local 'ta-overlay)
+(defvar-local ta-overlay nil)
 (defvar-local ta-current-position nil)
 (defvar-local ta-current-homophony-list nil)
 

@@ -1,6 +1,6 @@
 * ta.el － Deal with homophonic characters 搞定同音字
 
-For those who tired of deal with homophonic characters.\\
+For those who tired of deal with Chinese homophonic characters.\\
 受夠了「她他它祂牠」這種發音統統都是「tatatatata」的同音字？
 
 [[file:demo.gif]]
