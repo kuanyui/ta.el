@@ -120,14 +120,6 @@ which is a flatten list, like '(20182 22905 ...)"
       (remove-hook 'pre-command-hook 'ta-pre-command-hook t)
       (remove-hook 'post-command-hook 'ta-post-command-hook t))))
 
-(defvar ta-choose-homophony-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "<up>") 'ta-previous-homophony)
-    (define-key map (kbd "<down>") 'ta-next-homophony)
-    (define-key map (kbd "<left>") 'ta-previous-candidate)
-    (define-key map (kbd "<right>") 'ta-next-candidate)
-    map))
-
 ;; ======================================================
 ;; Overlays
 ;; ======================================================
