@@ -100,6 +100,7 @@ which is a flatten list, like '(20182 22905 ...)"
   ;; (ta-delete-all-overlays)
   )
 
+;;;###autoload
 (define-minor-mode ta-mode
   "Deal with homophonic characters"
   :lighter " ta"
