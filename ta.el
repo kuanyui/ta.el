@@ -213,7 +213,7 @@ find nextcandidate. Should be called interactively, not by idle timer."
 
 (defun ta-next-homophony (&optional reverse)
   (interactive)
-  (ta-find-previous-candidate reverse)
+  (ta-find-previous-candidate)
   (if (memq (char-after ta-current-position) ta-flattened-homophony-list)
       (if (and
            (number-or-marker-p ta-current-position)
