@@ -41,8 +41,10 @@
   '(("他" "她" "它" "牠" "祂")
     ("你" "妳")
     ("的" "得")
+    ("訂" "定")
     ("作" "做" "坐")
-    ("在" "再"))
+    ("在" "再")
+    ("板" "版"))
   "The homophonic characters' list. Feel free to customized this
   if you need."  )
 
