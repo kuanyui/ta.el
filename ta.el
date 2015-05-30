@@ -72,6 +72,9 @@ which is a flatten list, like '(20182 22905 ...)"
                   ta-homophony-list
                   :test (lambda (char list) (member char list)))))
 
+(defun ta-on-possible-candidate-character (position)
+  (ta-get-homophony-list (char-to-string (char-after (point)))))
+
 ;; ======================================================
 ;; Face
 ;; ======================================================
@@ -215,18 +218,24 @@ find nextcandidate. Should be called interactively, not by idle timer."
 (defun ta-next-homophony (&optional reverse)
   (interactive)
   (ta-find-previous-candidate)
-  (if (memq (char-after ta-current-position) ta-flattened-homophony-list)
-      (if (and
-           (number-or-marker-p ta-current-position)
-           (<= (1+ ta-current-position) (point-max)))
-          (let ((current-character (char-to-string (char-after ta-current-position))))
-            (ta-replace-char
-             ta-current-position
-             (ta--get-next-elem current-character
-                                (if reverse
-                                    (reverse ta-current-homophony-list)
-                                  ta-current-homophony-list)))))
-    (message "No candidate found.")))
+  (let ((dont-move (if (and (eq (1- (point)) ta-current-position)
+                            (not (ta-on-possible-candidate-character (point))))
+                       t nil
+                       )))
+
+    (if (memq (char-after ta-current-position) ta-flattened-homophony-list)
+        (if (and
+             (number-or-marker-p ta-current-position)
+             (<= (1+ ta-current-position) (point-max)))
+            (let ((current-character (char-to-string (char-after ta-current-position))))
+              (ta-replace-char
+               ta-current-position
+               (ta--get-next-elem current-character
+                                  (if reverse
+                                      (reverse ta-current-homophony-list)
+                                    ta-current-homophony-list)))
+              (if dont-move (right-char))))
+      (message "No candidate found."))))
 
 (defun ta-previous-homophony ()
   (interactive)
