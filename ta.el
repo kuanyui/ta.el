@@ -52,7 +52,7 @@
   "Max search range for possible homophony.")
 
 
-(defvar ta-delay 0
+(defvar ta-delay 0.1
   "The number of seconds to wait.")
 
 ;; ======================================================
