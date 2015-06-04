@@ -111,10 +111,6 @@ which is a flatten list, like '(20182 22905 ...)"
   :lighter " ta"
   :global nil
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "M-p") 'ta-previous-homophony)
-            (define-key map (kbd "M-n") 'ta-next-homophony)
-            (define-key map (kbd "M-i") 'ta-left)
-            (define-key map (kbd "M-o") 'ta-right)
             map)
   (if ta-mode
       (progn
