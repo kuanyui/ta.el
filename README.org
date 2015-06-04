@@ -1,6 +1,6 @@
 * ta.el － Deal with homophonic characters 搞定同音字
 
-For those who tired of deal with Chinese homophonic characters.\\
+For those who tired of deal with Chinese homophonic characters. (* In Chinese, for some homophone, it's nearly impossible for input method to select a correct character.)\\
 受夠了「她他它祂牠」這種發音統統都是「tatatatata」的同音字？
 
 [[file:demo.gif]]
@@ -36,12 +36,12 @@ Add following config into your =init.el= ：\\
 
 ;; Modify the character under cursor 
 ;; 修改游標下的字
-(define-key 'ta-mode-map (kbd "M-p") 'ta-previous-homophony)
-(define-key 'ta-mode-map (kbd "M-n") 'ta-next-homophony)
+(define-key ta-mode-map (kbd "M-p") 'ta-previous-homophony)
+(define-key ta-mode-map (kbd "M-n") 'ta-next-homophony)
 ;; Move cursor left/right to possible character
 ;; 把目前游標向左/右移動至可能的錯字
-(define-key 'ta-mode-map (kbd "M-i") 'ta-left)
-(define-key 'ta-mode-map (kbd "M-o") 'ta-right)
+(define-key ta-mode-map (kbd "M-i") 'ta-left)
+(define-key ta-mode-map (kbd "M-o") 'ta-right)
 
 #+END_SRC
 
