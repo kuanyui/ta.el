@@ -61,11 +61,14 @@ Add following config into your =init.el= ：\\
 ;; The homophonic characters' list.
 ;; 所有同音字的清單
 (setq ta-homophony-list
-  '(("他" "她" "它" "牠" "祂")
-    ("你" "妳")
-    ("的" "得")
-    ("作" "做" "坐")
-    ("在" "再")))
+      '(("他" "她" "它" "牠" "祂")
+        ("你" "妳")
+        ("的" "得")
+        ("訂" "定")
+        ("作" "做" "坐")
+        ("在" "再")
+        ("板" "版")
+        ))
 
 ;; Automatically searching range for possible homophony cadidates.
 ;; By default, search only 300 characters backward the cursor.
@@ -73,9 +76,9 @@ Add following config into your =init.el= ：\\
 (setq ta-max-search-range 300
   )
 
-;; The seconds to wait "auto-search-and-highlight". Default is 0.
-;; 等待自動搜索的延遲時間。預設為 0。
-(setq ta-delay 0)
+;; The seconds to wait "auto-search-and-highlight". Default is 0.1 second.
+;; 等待自動搜索的延遲時間。預設為 0.1 秒。
+(setq ta-delay 0.1)
 
 #+END_SRC
 
@@ -83,6 +86,6 @@ Add following config into your =init.el= ：\\
 
 WTFPL 2.0
 
-Ono Hiroko (kuanyui) (ɔ) Copyleft 2014
+Ono Hiroko (kuanyui) (ɔ) Copyleft 2015
 
 This program is free software. It comes without any warranty, to the extent permitted by applicable law. You can redistribute it and/or modify it under the terms of the Do What The Fuck You Want To Public License, Version 2, as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
