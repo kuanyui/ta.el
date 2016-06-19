@@ -72,7 +72,7 @@ which is a flatten list, like '(20182 22905 ...)"
                   ta-homophony-list
                   :test (lambda (char list) (member char list)))))
 
-(defun ta-on-possible-candidate-character (position)
+(defun ta-on-possible-candidate-character-p (position)
   (ta-get-homophony-list (char-to-string (char-after (point)))))
 
 ;; ======================================================
@@ -214,8 +214,9 @@ find nextcandidate. Should be called interactively, not by idle timer."
 (defun ta-next-homophony (&optional reverse)
   (interactive)
   (ta-find-previous-candidate)
-  (let ((dont-move (if (and (eq (1- (point)) ta-current-position)
-                            (not (ta-on-possible-candidate-character (point))))
+  (let ((dont-move (if (or (eobp)
+                           (and (eq (1- (point)) ta-current-position)
+                                (not (ta-on-possible-candidate-character-p (point)))))
                        t nil
                        )))
 
